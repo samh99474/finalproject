@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment implements
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
-                Toast.makeText(getActivity(),"标记被点击了，这里的纬度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"這裡的緯度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
