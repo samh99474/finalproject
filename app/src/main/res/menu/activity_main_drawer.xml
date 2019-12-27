@@ -22,16 +22,16 @@
             android:title="我的最愛" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Contact us">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_live_help_black_24dp"
+                android:title="Help" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
+                android:title="About" />
         </menu>
     </item>
 

@@ -10,7 +10,7 @@ public class ShareViewModel extends ViewModel {
 
     public ShareViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is share fragment");
+        mText.setValue("This is Help fragment \n 如有問題請撥打客服電話 : 0800-092-000");
     }
 
     public LiveData<String> getText() {
