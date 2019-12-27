@@ -10,7 +10,7 @@ public class ToolsViewModel extends ViewModel {
 
     public ToolsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is star fragment");
+        mText.setValue("This is favorite fragment");
     }
 
     public LiveData<String> getText() {
