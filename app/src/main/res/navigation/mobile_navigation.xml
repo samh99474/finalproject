@@ -18,9 +18,9 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
+        android:id="@+id/nav_personalinfo"
         android:name="com.example.myapplication_mapnavigationdrawer.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:label="個人資料"
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
