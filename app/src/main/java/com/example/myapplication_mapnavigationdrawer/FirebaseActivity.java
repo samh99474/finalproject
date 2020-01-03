@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -57,10 +58,20 @@ public class FirebaseActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+                Toast.makeText(FirebaseActivity.this,"Success", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(FirebaseActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 // ...
             } else {
-                // Sign in failed. If response is null the user canceled the
+
+                Toast.makeText(FirebaseActivity.this,"Sign in failed", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setClass(FirebaseActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                //Sign in failed . If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...

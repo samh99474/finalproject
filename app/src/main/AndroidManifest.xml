@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/loticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FirebaseActivity"></activity>
+        <activity android:name=".ui.bar_action"></activity>
+        <activity android:name=".FirebaseActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
