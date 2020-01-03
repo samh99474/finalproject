@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/loticon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FirebaseActivity"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -22,7 +23,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC_TvWB25BZdRXo1OzwsXRa87aTepckSzk" />
 
-        <activity android:name=".ui.home.infowindow"></activity>
+        <activity android:name=".ui.home.infowindow" />
         <activity
             android:name=".MainActivity"
             android:label="停場場訂位APP"

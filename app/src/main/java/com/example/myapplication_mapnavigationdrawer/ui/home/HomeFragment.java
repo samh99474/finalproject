@@ -1,26 +1,27 @@
 package com.example.myapplication_mapnavigationdrawer.ui.home;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.myapplication_mapnavigationdrawer.MainActivity;
 import com.example.myapplication_mapnavigationdrawer.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,13 +31,26 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class HomeFragment extends Fragment implements
         OnMapReadyCallback
 {
 
     private HomeViewModel homeViewModel;
-   // private AppCompatActivity;
+    private GoogleMap mymap;
+    // private AppCompatActivity;
     private final static int REQUEST_PERMISSIONS = 1;
 
     @Override
@@ -57,8 +71,49 @@ public class HomeFragment extends Fragment implements
         }
     }
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MyGsonData mygsondata = new Gson().fromJson("{result:" + intent.getExtras().getString("json") + "}", MyGsonData.class);
+
+            for (int i=0; i<mygsondata.result.length-1; i++) {
+                Log.e("res", mygsondata.result[i].ID+"");
+
+                MarkerOptions m1 = new MarkerOptions ();
+
+                int height = 100;
+                int width = 100;
+                BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.mipmap.loticon);
+                Bitmap b=bitmapdraw.getBitmap();
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+
+                m1.position ( new LatLng( mygsondata.result[i].lat  , mygsondata.result[i].lon ) );
+                m1.title( mygsondata.result[i].NAME );
+                m1.draggable ( true );
+                //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
+                m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
+                if (mymap != null){
+                    mymap.addMarker ( m1 );
+                }
+
+
+
+            }
+        }
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActivity() != null)
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                    new IntentFilter("MyMessage"));
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         homeViewModel =
                 ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.activity_main2, container, false);
@@ -83,7 +138,33 @@ public class HomeFragment extends Fragment implements
             }
         });
  */
+
         return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Request req = new Request.Builder().url("https://data.ntpc.gov.tw/od/data/api/1A71BA9C-EF21-4524-B882-6D085DF2877A?$format=json").build();
+        new OkHttpClient().newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("查詢失敗", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try {
+                    String json = response.body().string();
+                    Intent i = new Intent("MyMessage");
+                    i.putExtra("json", json);
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -95,7 +176,8 @@ public class HomeFragment extends Fragment implements
                         Manifest.permission.ACCESS_COARSE_LOCATION)!=
                         PackageManager.PERMISSION_GRANTED)
             return;
-        map.setMyLocationEnabled ( true );
+        mymap = map;
+        mymap.setMyLocationEnabled ( true );
         MarkerOptions m1 = new MarkerOptions ();
 
         int height = 100;
@@ -104,25 +186,26 @@ public class HomeFragment extends Fragment implements
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
+
         m1.position ( new LatLng( 25.033611, 121.565000 ) );
         m1.title("台北101");
         m1.draggable ( true );
         //m1.icon(BitmapDescriptorFactory.fromResource(smallMarker));
         m1.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        map.addMarker ( m1 );
+        mymap.addMarker ( m1 );
 
         MarkerOptions m2 = new MarkerOptions ();
         m2.position ( new LatLng ( 25.047924, 121.517081 ) );
         m2.title ( "台北車站" );
         m2.draggable ( true );
         m2.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        map.addMarker ( m2 );
+        mymap.addMarker ( m2 );
 
-        map.moveCamera ( CameraUpdateFactory.newLatLngZoom (
+        mymap.moveCamera ( CameraUpdateFactory.newLatLngZoom (
                 new LatLng ( 25.034,121.545 ), 13 ) );
 
         //Toast
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mymap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
                 Toast.makeText(getActivity(),"這裡的緯度是:"+marker.getPosition().latitude+"",Toast.LENGTH_SHORT).show();
@@ -130,8 +213,9 @@ public class HomeFragment extends Fragment implements
             }
         });
 
-        //點marker跳infowindo
-        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        //點marker跳itude+"",Toast.LENGTH_SHORT).show();
+        //                return false;infowindo
+        mymap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker arg0) {
                 // TODO Auto-generated method stub
@@ -140,5 +224,11 @@ public class HomeFragment extends Fragment implements
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
     }
 }
