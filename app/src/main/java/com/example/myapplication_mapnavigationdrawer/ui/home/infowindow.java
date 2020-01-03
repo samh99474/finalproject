@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication_mapnavigationdrawer.MainActivity;
@@ -15,6 +16,8 @@ public class infowindow extends AppCompatActivity {
 
     private Button back ;
     private Button reservation;
+    private TextView remain_show;
+    private TextView price_show;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,11 @@ public class infowindow extends AppCompatActivity {
         setContentView(R.layout.activity_infowindow);
 
         back = findViewById(R.id.back);
+        remain_show = findViewById(R.id.remain_show);
+        price_show = findViewById(R.id.price_show);
+
+        remain_show.setText(String.format("12"));
+        price_show.setText(String.format("80/h"));
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,7 +10,7 @@ public class GalleryViewModel extends ViewModel {
 
     public GalleryViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is historical fragment");
+        mText.setValue("暫無紀錄，開通黃金釋迦會員後即可使用");
     }
 
     public LiveData<String> getText() {
